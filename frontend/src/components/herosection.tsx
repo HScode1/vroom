@@ -31,22 +31,22 @@ export default function HeroBanner() {
           </Link>
           
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/locations" className="text-white hover:text-[#BADA55] transition-colors">
+            <Link href="/locations" className="text-white hover:text-[#C8EC66] transition-colors">
               Nos scooters
             </Link>
-            <Link href="/pricing" className="text-white hover:text-[#BADA55] transition-colors">
+            <Link href="/pricing" className="text-white hover:text-[#C8EC66] transition-colors">
               Tarifs
             </Link>
-            <Link href="/about" className="text-white hover:text-[#BADA55] transition-colors">
+            <Link href="/about" className="text-white hover:text-[#C8EC66] transition-colors">
               À propos
             </Link>
           </div>
           
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="icon" className="text-white hover:text-[#BADA55]">
+            <Button variant="ghost" size="icon" className="text-white hover:text-[#C8EC66]">
               <MapPin className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="text-white hover:text-[#BADA55]">
+            <Button variant="ghost" size="icon" className="text-white hover:text-[#C8EC66]">
               <ShoppingCart className="h-5 w-5" />
             </Button>
           </div>
@@ -60,7 +60,7 @@ export default function HeroBanner() {
             <AnimatedText text="Découvrez l'excellence de" delay={0.4} />
           </h2>
           
-          <h1 className="text-[#BADA55] text-8xl md:text-[150px] leading-none font-bold mb-6">
+          <h1 className="text-[#C8EC66] text-8xl md:text-[150px] leading-none font-bold mb-6">
             <AnimatedText 
               text="VROOM" 
               delay={0.6}
@@ -77,8 +77,8 @@ export default function HeroBanner() {
       {/* Bottom content */}
       <div className="absolute bottom-8 left-0 w-full z-20 px-8">
         <div className="flex justify-between items-end max-w-7xl mx-auto">
-          <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-6 max-w-xs border border-[#BADA55]/20">
-            <h3 className="text-[#BADA55] text-2xl font-bold mb-2">Premium Cars</h3>
+          <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-6 max-w-xs border border-[#C8EC66]/20">
+            <h3 className="text-[#C8EC66] text-2xl font-bold mb-2">Premium Cars</h3>
             <p className="text-white/80">
               "Le meilleur" est exactement là où nous voulons être. Tout au nom de l'excellence automobile.
             </p>

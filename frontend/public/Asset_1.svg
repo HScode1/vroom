@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1379.78 720.29">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: Verdana-Bold, Verdana;
+        font-size: 329px;
+        font-weight: 700;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        stroke: #fff;
+        stroke-miterlimit: 10;
+      }
+    </style>
+  </defs>
+  <g id="Layer_2-2" data-name="Layer 2">
+    <g>
+      <path class="cls-2" d="M511.35.5l-85.33,132.15-.91,152.82,39.95-.25,32.25-105.15,143.76.13.75,105.35,39.96-.19,33.96-104.22,77.77-51.03,87.05,29.46c40.53,3.85,49.46-14.02,51.22-26.8l-37.56-23.27c0-10.37-5.15-16-14.96-21.69l-121.03-68.57L511.35.5"/>
+      <polygon class="cls-2" points="785.77 147.15 738.94 214.12 765.85 286.02 804.57 285.93 785.77 147.15"/>
+      <polygon class="cls-2" points="581.74 190.09 594.24 285.15 555.92 285.03 540.52 243.48 581.74 190.09"/>
+    </g>
+  </g>
+  <g id="Layer_3" data-name="Layer 3">
+    <text class="cls-1" transform="translate(0 620.52)"><tspan x="0" y="0">VROOM</tspan></text>
+  </g>
+</svg>

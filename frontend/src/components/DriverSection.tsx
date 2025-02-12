@@ -1,138 +1,170 @@
-// DriverSections.tsx
-
 import React from 'react';
 import { motion } from 'framer-motion';
+import { ShieldCheck, Car, Users2, Clock, Phone, ChevronRight, BadgeCheck } from 'lucide-react';
 
-interface DriverSectionProps {
-  type: 'new' | 'pro';
-  title: string;
-  subtitle?: string;
-  description: string;
-  phone: string;
-  direction: 'left' | 'right';
-}
-
-const DriverSection: React.FC<DriverSectionProps> = ({ 
-  type, 
-  title, 
-  description, 
-  phone,
-  direction
-}) => {
+const DriverCard = ({ type, title, features, phoneNumber, imageUrl, reverse = false }) => {
   return (
-    <motion.div
-      initial={{ 
-        x: direction === 'left' ? -200 : 200,
-        opacity: 0
-      }}
-      whileInView={{ 
-        x: 0,
-        opacity: 1
-      }}
-      viewport={{ 
-        once: false,
-        margin: "-100px"
-      }}
-      transition={{ 
-        type: "spring",
-        bounce: 0.2,
-        duration: 1.8,
-        delay: direction === 'left' ? 0 : 0.2
-      }}
-      className={`rounded-3xl p-8 ${type === 'new' ? 'bg-gray-100' : 'bg-[#DCFF85]'}`}
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className={`relative rounded-3xl overflow-hidden ${
+        reverse ? 'bg-[#C8EC66]' : 'bg-white'
+      }`}
     >
-      <div className="inline-block px-4 py-1 bg-white rounded-full text-sm mb-6">
-        {type === 'new' ? 'Jeune permis' : 'Chauffeur privé'}
+      <div className="absolute inset-0 opacity-10">
+        <img 
+          src={imageUrl} 
+          alt={title}
+          className="w-full h-full object-cover"
+        />
       </div>
-      
-      <h2 className="text-3xl font-bold mb-2">
-        {title}
-      </h2>
-      
-      <p className="text-gray-600 mb-8 max-w-xl">
-        {description}
-      </p>
-      
-      <div className="flex flex-wrap gap-4">
-        <motion.button 
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ duration: 0.3 }}
-          className="px-6 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
-        >
-          Nos véhicules
-        </motion.button>
-        <motion.button 
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ duration: 0.3 }}
-          className="px-6 py-3 bg-white rounded-full hover:bg-gray-100 transition-colors"
-        >
-          {phone}
-        </motion.button>
+
+      <div className="relative p-8 md:p-12">
+        <div className="flex flex-col h-full">
+          <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium mb-6 w-fit ${
+            reverse ? 'bg-white text-[#C8EC66]' : 'bg-[#C8EC66]/10 text-[#C8EC66]'
+          }`}>
+            {type}
+          </span>
+
+          <h3 className={`text-2xl md:text-3xl font-bold mb-6 ${
+            reverse ? 'text-white' : 'text-gray-900'
+          }`}>
+            {title}
+          </h3>
+
+          <div className="flex-grow space-y-4 mb-8">
+            {features.map((feature, index) => (
+              <motion.div 
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="flex items-start gap-3"
+              >
+                <BadgeCheck className={`w-5 h-5 mt-1 ${
+                  reverse ? 'text-white' : 'text-[#C8EC66]'
+                }`} />
+                <span className={reverse ? 'text-white/90' : 'text-gray-600'}>
+                  {feature}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4">
+            <motion.a
+              href={`tel:${phoneNumber}`}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className={`inline-flex items-center justify-center px-6 py-3 rounded-xl font-medium transition-colors ${
+                reverse 
+                  ? 'bg-white text-[#C8EC66] hover:bg-white/90' 
+                  : 'bg-[#C8EC66] text-white hover:bg-[#C8EC66]/90'
+              }`}
+            >
+              <Phone className="w-4 h-4 mr-2" />
+              {phoneNumber}
+            </motion.a>
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className={`inline-flex items-center justify-center px-6 py-3 rounded-xl font-medium ${
+                reverse 
+                  ? 'bg-black/10 text-white hover:bg-black/20' 
+                  : 'bg-black/5 text-gray-700 hover:bg-black/10'
+              }`}
+            >
+              En savoir plus
+              <ChevronRight className="w-4 h-4 ml-2" />
+            </motion.button>
+          </div>
+        </div>
       </div>
     </motion.div>
   );
 };
 
-const DownArrow: React.FC = () => (
-  <motion.svg
-    className="w-12 h-12 text-[#DCFF85] mx-auto my-8"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    initial={{ y: -20, opacity: 0 }}
-    whileInView={{ y: 0, opacity: 1 }}
-    viewport={{ once: false }}
-    transition={{ duration: 1, delay: 0.5 }}
-  >
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 13l-4-4h8l-4 4z" />
-  </motion.svg>
-);
-
-const DriverSections: React.FC = () => {
+const DriverSections = () => {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12 space-y-6">
-      <motion.h1 
-        initial={{ opacity: 0, y: -20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false }}
-        transition={{ duration: 1 }}
-        className="text-2xl font-bold mb-4"
-      >
-        VOUS ÊTES
-      </motion.h1>
-      
-      <motion.div 
-        className="text-center"
-        initial={{ opacity: 0, y: -20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false }}
-        transition={{ duration: 1, delay: 0.2 }}
-      >
-        <h2 className="text-xl text-gray-500 mb-2">Seul, on va plus vite,</h2>
-        <p className="text-2xl text-[#DCFF85]">Ensemble on va plus loin.</p>
-      </motion.div>
-      
-      <DownArrow />
-      
-      <div className="grid md:grid-cols-2 gap-6">
-        <DriverSection
-          type="new"
-          direction="left"
-          title="CONDUISEZ EN TOUTE SÉRÉNITÉ DÈS AUJOURD'HUI !"
-          description="Vous venez d'obtenir votre permis et vous cherchez votre premier véhicule ? Nous vous proposons des voitures fiables, économiques et faciles à conduire, idéales pour les nouveaux conducteurs. Profitez de nos offres spéciales avec des facilités de paiement, afin de démarrer votre aventure sur la route en toute sérénité !"
-          phone="06 19 93 37 65"
-        />
-        
-        <DriverSection
-          type="pro"
-          direction="right"
-          title="ALLIEZ CONFORT & ÉCONOMIE AU QUOTIDIEN !"
-          description="Besoin d'un véhicule pour votre activité de chauffeur VTC ? Découvrez notre sélection de voitures confortables et élégantes, conçues pour offrir une expérience premium à vos clients. Nous proposons également des solutions de financement adaptées à votre profession."
-          phone="06 19 93 37 65"
-        />
+    <section className="py-24 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <span className="text-[#C8EC66] text-lg font-medium">NOUS VOUS ACCOMPAGNONS 🤝</span>
+          <h2 className="text-3xl md:text-4xl font-bold mt-4">
+            Une solution adaptée à chaque conducteur
+          </h2>
+          <p className="text-gray-600 text-lg mt-4 max-w-2xl mx-auto">
+            Que vous soyez jeune conducteur ou professionnel, nous avons 
+            la solution parfaite pour vous.
+          </p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          <DriverCard
+            type="🎯 Jeune conducteur"
+            title="Démarrez en toute confiance"
+            features={[
+              "Véhicules adaptés aux nouveaux conducteurs",
+              "Assurance avantageuse pour les jeunes permis",
+              "Accompagnement personnalisé",
+              "Garantie 12 mois incluse",
+              "Options de financement flexibles"
+            ]}
+            phoneNumber="06 49 49 39 39"
+            imageUrl="/api/placeholder/800/600"
+          />
+
+          <DriverCard
+            type="🚖 Chauffeur VTC"
+            title="Optimisez votre activité"
+            features={[
+              "Véhicules conformes aux normes VTC",
+              "Entretien et maintenance inclus",
+              "Kilométrage illimité",
+              "Service d'assistance 24/7",
+              "Solutions de remplacement disponibles"
+            ]}
+            phoneNumber="06 49 49 39 39"
+            imageUrl="/api/placeholder/800/600"
+            reverse={true}
+          />
+        </div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6"
+        >
+          {[
+            { icon: ShieldCheck, label: "Garantie incluse", value: "12 mois" },
+            { icon: Car, label: "Véhicules disponibles", value: "100+" },
+            { icon: Users2, label: "Clients satisfaits", value: "1000+" },
+            { icon: Clock, label: "Support client", value: "24/7" }
+          ].map((stat, index) => (
+            <motion.div
+              key={index}
+              whileHover={{ y: -5 }}
+              className="bg-white p-6 rounded-2xl text-center"
+            >
+              <stat.icon className="w-8 h-8 mx-auto mb-4 text-[#C8EC66]" />
+              <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
+              <div className="text-gray-600 mt-1">{stat.label}</div>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
-    </div>
+    </section>
   );
 };
 

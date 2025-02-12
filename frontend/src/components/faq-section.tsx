@@ -15,7 +15,7 @@ const FaqItem = ({ question, answer }) => {
       className="mb-4"
     >
       <motion.div
-        className={`w-full rounded-2xl border-2 border-gray-200 overflow-hidden hover:border-gray-300 transition-all duration-200`}
+        className={`w-full rounded-2xl border-2 border-gray-200 overflow-hidden hover:border-[#C8EC66] transition-all duration-200`}
       >
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -26,7 +26,7 @@ const FaqItem = ({ question, answer }) => {
             animate={{ rotate: isOpen ? 180 : 0 }}
             transition={{ duration: 0.2 }}
           >
-            <ChevronDown className="w-6 h-6" />
+            <ChevronDown className="w-6 h-6 text-[#C8EC66]" />
           </motion.div>
         </button>
         
@@ -49,7 +49,7 @@ const FaqItem = ({ question, answer }) => {
   );
 };
 
-export function FaqSection() {
+export const FaqSection = () => {
   const faqs = [
     {
       question: "Quels types de véhicules proposez-vous à la vente ?",
@@ -86,7 +86,7 @@ export function FaqSection() {
           transition={{ duration: 0.5 }}
           className="text-4xl font-bold mb-12 text-center"
         >
-          F.A.Q
+          <span className="text-[#C8EC66]">F.A.Q</span>
         </motion.h2>
         
         <div>
