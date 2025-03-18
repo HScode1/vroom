@@ -7,7 +7,9 @@ export default function CarDetailPage() {
   return (
     <>
       <Navbar />
+      <div className="">
       <CarDetailContent />
+      </div>
       
       <Footer />
     </>
