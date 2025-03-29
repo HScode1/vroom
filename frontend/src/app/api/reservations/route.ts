@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     }
 
     // Récupération des données de la requête
-    const { carId, appointmentDate, duration, message } = await request.json();
+    const { carId, appointmentDate, duration, message, deliveryInfo } = await request.json();
     
     // Validation des données
     if (!carId || !appointmentDate || !duration) {
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     // Vérification que la voiture existe et est disponible
     const { data: car, error: carError } = await supabase
       .from("cars")
-      .select("id, title, seller_id, status")
+      .select("id, title, seller_id, availability")
       .eq("id", carId)
       .single();
 
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (car.status !== "available") {
+    if (car.availability !== "available") {
       return NextResponse.json(
         { error: "Cette voiture n'est pas disponible à la réservation" },
         { status: 409 }
@@ -68,43 +68,65 @@ export async function POST(request: Request) {
       );
     }
 
-    // Insertion de la réservation
+    // Récupération de l'ID utilisateur dans Supabase à partir de l'ID Clerk
+    const { data: userRecord, error: userError } = await supabase
+      .from("users")
+      .select("id")
+      .eq("clerk_id", userId)  // Suppose une colonne clerk_id qui stocke l'ID Clerk
+      .single();
+
+    if (userError || !userRecord) {
+      return NextResponse.json(
+        { error: "Utilisateur non trouvé dans notre base de données" },
+        { status: 404 }
+      );
+    }
+
+    // Insertion de la réservation (seulement avec les champs existants dans le schéma)
+    console.log("Données de réservation simplifiées:", {
+      car_id: carId,
+      user_id: userRecord.id,  // Utiliser l'UUID Supabase, pas l'ID Clerk
+      appointment_date: startTime.toISOString(),
+      duration,
+      status: "confirmed"
+    });
+
     const { data: reservation, error: insertError } = await supabase
       .from("reservations")
       .insert({
         car_id: carId,
-        user_id: userId,
+        user_id: userRecord.id,  // Utiliser l'UUID Supabase, pas l'ID Clerk
         appointment_date: startTime.toISOString(),
-        duration,
-        message: message || null,
-        status: "confirmed",
+        duration: parseInt(String(duration), 10),
+        status: "confirmed"
       })
       .select()
       .single();
 
     if (insertError) {
+      console.error("Erreur lors de la création de la réservation:", insertError);
       return NextResponse.json(
-        { error: "Erreur lors de la création de la réservation" },
+        { error: "Erreur lors de la création de la réservation: " + insertError.message },
         { status: 500 }
       );
     }
 
-    // Mise à jour du statut de la voiture
+    // Mise à jour de l'availability de la voiture
     const { error: updateError } = await supabase
       .from("cars")
-      .update({ status: "reserved" })
+      .update({ availability: "reserved" })
       .eq("id", carId);
 
     if (updateError) {
-      console.error("Erreur lors de la mise à jour du statut de la voiture:", updateError);
+      console.error("Erreur lors de la mise à jour de l'availability de la voiture:", updateError);
       // On ne renvoie pas d'erreur au client car la réservation a déjà été créée
     }
 
-    // Récupération des informations de l'utilisateur pour les emails
-    const { data: userData, error: userError } = await supabase
+    // Récupération des informations pour les emails
+    const { data: userData, error: userDataError } = await supabase
       .from("users")
       .select("email")
-      .eq("id", userId)
+      .eq("id", userRecord.id)
       .single();
 
     const { data: sellerData, error: sellerError } = await supabase
@@ -160,7 +182,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Erreur inattendue:", error);
     return NextResponse.json(
-      { error: "Une erreur inattendue est survenue" },
+      { error: "Une erreur inattendue est survenue: " + (error instanceof Error ? error.message : String(error)) },
       { status: 500 }
     );
   }

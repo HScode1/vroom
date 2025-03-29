@@ -479,6 +479,7 @@ export type Database = {
           id: string
           name: string | null
           role: string | null
+          clerk_id: string | null  // Add this line
         }
         Insert: {
           created_at?: string | null

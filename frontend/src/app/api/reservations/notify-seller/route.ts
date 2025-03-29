@@ -9,6 +9,17 @@ interface ReservationData {
   duration: number;
   reservationId: string;
   buyerEmail?: string;
+  deliveryInfo?: {
+    type: 'pickup' | 'delivery';
+    location?: {
+      name: string;
+      address: string;
+      postalCode: string;
+      distance: string;
+    } | null;
+    postalCode?: string;
+    price?: number;
+  } | null;
 }
 
 // Initialisation de Resend avec la clé API
@@ -23,7 +34,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 
     const data: ReservationData = await request.json();
-    const { email, carTitle, appointmentDate, duration, reservationId, buyerEmail } = data;
+    const { email, carTitle, appointmentDate, duration, reservationId, buyerEmail, deliveryInfo } = data;
 
     // Validation basique
     if (!email || !carTitle || !appointmentDate || !duration || !reservationId) {
@@ -52,8 +63,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     // Génération du fichier iCal
     const iCalContent = generateICalEvent({
       summary: `Nouvelle réservation pour ${carTitle}`,
-      description: `Un client a réservé votre voiture ${carTitle}.${buyerEmail ? ` Email du client: ${buyerEmail}` : ''}`,
-      location: 'Vroom Showroom',
+      description: `Un client a réservé votre voiture ${carTitle}.${buyerEmail ? ` Email du client: ${buyerEmail}` : ''}${deliveryInfo ? ` Type de livraison: ${deliveryInfo.type === 'pickup' ? 'Retrait en agence' : 'Livraison à domicile'}` : ''}`,
+      location: deliveryInfo?.type === 'pickup' && deliveryInfo?.location ? `${deliveryInfo.location.name}, ${deliveryInfo.location.address}` : 'Vroom Showroom',
       startTime: appointmentDateTime,
       endTime: new Date(appointmentDateTime.getTime() + duration * 60000),
       attendeeName: email.split('@')[0], // Utilisation de la partie locale de l'email comme nom
@@ -90,6 +101,13 @@ DÉTAILS DE LA RÉSERVATION :
 - Durée : ${duration} minutes
 - Voiture : ${carTitle}
 ${buyerEmail ? `- Email du client : ${buyerEmail}` : ''}
+${deliveryInfo ? `
+DÉTAILS DE LIVRAISON :
+- Type : ${deliveryInfo.type === 'pickup' ? 'Retrait en agence' : 'Livraison à domicile'}
+${deliveryInfo.type === 'pickup' && deliveryInfo.location ? `- Agence : ${deliveryInfo.location.name}
+- Adresse : ${deliveryInfo.location.address}, ${deliveryInfo.location.postalCode}` : ''}
+${deliveryInfo.type === 'delivery' ? `- Code postal : ${deliveryInfo.postalCode}
+- Prix de livraison : ${deliveryInfo.price || 0}€` : ''}` : ''}
 
 Un fichier d'invitation (.ics) est joint pour l'ajouter facilement à votre calendrier.
 
@@ -180,6 +198,18 @@ Vroom | Le meilleur moyen de vendre votre voiture
                 <p><strong>Durée :</strong> ${duration} minutes</p>
                 <p><strong>Voiture :</strong> ${carTitle}</p>
                 ${buyerEmail ? `<p><strong>Email du client :</strong> ${buyerEmail}</p>` : ''}
+                ${deliveryInfo ? `
+                <h3>Détails de livraison :</h3>
+                <p><strong>Type :</strong> ${deliveryInfo.type === 'pickup' ? 'Retrait en agence' : 'Livraison à domicile'}</p>
+                ${deliveryInfo.type === 'pickup' && deliveryInfo.location ? `
+                <p><strong>Agence :</strong> ${deliveryInfo.location.name}</p>
+                <p><strong>Adresse :</strong> ${deliveryInfo.location.address}, ${deliveryInfo.location.postalCode}</p>
+                ` : ''}
+                ${deliveryInfo.type === 'delivery' ? `
+                <p><strong>Code postal :</strong> ${deliveryInfo.postalCode}</p>
+                <p><strong>Prix de livraison :</strong> ${deliveryInfo.price || 0}€</p>
+                ` : ''}
+                ` : ''}
             </div>
             
             <p>Un fichier d'invitation (.ics) est joint pour l'ajouter facilement à votre calendrier.</p>

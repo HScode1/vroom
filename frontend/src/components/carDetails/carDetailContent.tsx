@@ -635,11 +635,8 @@ export default function CarDetailContent({ carId }: CarDetailContentProps) {
       <DeliveryModal
         isOpen={isDeliveryModalOpen}
         onClose={() => setIsDeliveryModalOpen(false)}
-        onValidate={(option) => {
-          console.log('Delivery/Booking option selected:', option);
-          // Add logic here to handle booking/delivery request
-          setIsDeliveryModalOpen(false);
-        }}
+        carId={carId}
+        carTitle={`${carData?.brand || ''} ${carData?.model || ''}`}
       />
     </div>
   );
