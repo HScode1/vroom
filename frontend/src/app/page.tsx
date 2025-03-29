@@ -1,28 +1,23 @@
+
 'use client'
 import React from 'react';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ChevronDown, MapPin, Check, Star, Shield, MessageCircle, ArrowRight,  CheckCircle, Truck, Search, BarChart, ShoppingCart, Sparkles, Target, Handshake, Award, DollarSign, BarChart2, Zap, Lock, CreditCard } from 'lucide-react';
-import { FaqSection } from "@/components/faq-section";
-import { Footer } from "@/components/Footer";
-import DriverSections from "@/components/DriverSection";
-import Navbar from "@/components/Navbar";
+// Removed unused icons: MapPin, Check, Star, CheckCircle, Truck, BarChart
+import { ChevronDown, Shield, MessageCircle, ArrowRight, Search, ShoppingCart, Sparkles, Target, Handshake, Award, DollarSign, BarChart2, Zap, Lock, CreditCard } from 'lucide-react';
+import { FaqSection } from "@/components/Home/faq-section";
+import { Footer } from "@/components/layout/Footer";
+import Navbar from "@/components/layout/Navbar";
 import ProcessGridSection from '@/components/ProcessGrid';
-import  DriverOptionsSection from '@/components/TestimonialsSection';
-import VehiculesSection from '@/components/vehiculesection';
-import { CarSectionLanding } from '@/components/CarSectionLanding';
-import BuyVehicleBanner from '@/components/BuyVehicleBanner';
-import PartenaireMobiliteSection from '@/components/PartenaireMobiliteSection';
-import Apoinntement from '@/components/apoinntement';
-import HeaderSection from '@/components/HeaderSection';
-import VroomBusinessSection from '@/components/VroomBusinessSection';
-import Head from 'next/head';
-
-
-
+import DriverProfilesSection from '@/components/Home/DriverProfilesSection';
+import { VehicleShowcaseSection } from '@/components/Home/VehicleShowcaseSection';
+import BuyFromHomeBanner from '@/components/Home/BuyFromHomeBanner';
+import SectionRendezVous from '@/components/Home/SectionRendezVous';
+import AboutVroomSection from '@/components/Home/AboutVroomSection';
+import VroomBusinessSection from '@/components/Home/VroomBusinessSection';
+// Removed unused import: Head from 'next/head'; - 'use client' components usually don't need <Head> directly. Metadata API is preferred.
 
 const fadeInUp = {
-
   initial: { opacity: 0, y: 30 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.8 }
@@ -36,10 +31,25 @@ const staggerChildren = {
   }
 };
 
-
-
 function ServiceCards() {
-  const [hoveredCard, setHoveredCard] = useState(null);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null); // Explicitly type state
+  const [isMobile, setIsMobile] = useState(true);
+
+  // Effet pour détecter la taille d'écran côté client uniquement
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Vérification initiale
+    checkMobile();
+
+    // Ajout d'un listener pour les changements de taille d'écran
+    window.addEventListener('resize', checkMobile);
+
+    // Nettoyage du listener
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const cards = [
     {
@@ -47,12 +57,13 @@ function ServiceCards() {
       title: 'ACHETER UN VÉHICULE',
       subtitle: 'Trouvez la voiture de vos rêves',
       description: 'Parcourez notre sélection de véhicules certifiés et garantis. Nous proposons un large choix de marques et modèles, tous rigoureusement inspectés pour vous garantir une qualité optimale.',
-      icon: <ShoppingCart className="w-6 h-6" />,
+      mobileDescription: 'Parcourez notre sélection de véhicules certifiés et garantis.',
+      icon: <ShoppingCart className="w-5 h-5 md:w-6 md:h-6" />,
       color: 'bg-white',
       benefits: [
-        { icon: <Search className="w-5 h-5 text-[#C8EC66]" />, title: 'Véhicules inspectés' },
-        { icon: <Shield className="w-5 h-5 text-[#C8EC66]" />, title: 'Garantie incluse' },
-        { icon: <CreditCard className="w-5 h-5 text-[#C8EC66]" />, title: 'Financement flexible' }
+        { icon: <Search className="w-4 h-4 md:w-5 md:h-5 text-[#C8EC66]" />, title: 'Véhicules inspectés' },
+        { icon: <Shield className="w-4 h-4 md:w-5 md:h-5 text-[#C8EC66]" />, title: 'Garantie incluse' },
+        { icon: <CreditCard className="w-4 h-4 md:w-5 md:h-5 text-[#C8EC66]" />, title: 'Financement flexible' }
       ]
     },
     {
@@ -60,257 +71,185 @@ function ServiceCards() {
       title: 'COMMANDER UN VÉHICULE',
       subtitle: 'Sur mesure selon vos besoins',
       description: 'Vous ne trouvez pas exactement ce que vous cherchez ? Confiez-nous votre projet et nous nous chargeons de dénicher le véhicule qui correspond parfaitement à vos attentes.',
-      icon: <Sparkles className="w-6 h-6" />,
+      mobileDescription: 'Confiez-nous votre projet et nous dénicherons le véhicule parfait pour vous.',
+      icon: <Sparkles className="w-5 h-5 md:w-6 md:h-6" />,
       color: 'bg-[#C8EC66]',
       benefits: [
-        { icon: <Target className="w-5 h-5 text-gray-800" />, title: 'Recherche personnalisée' },
-        { icon: <Handshake className="w-5 h-5 text-gray-800" />, title: 'Accompagnement dédié' },
-        { icon: <Award className="w-5 h-5 text-gray-800" />, title: 'Meilleur prix garanti' }
+        { icon: <Target className="w-4 h-4 md:w-5 md:h-5 text-gray-800" />, title: 'Recherche personnalisée' },
+        { icon: <Handshake className="w-4 h-4 md:w-5 md:h-5 text-gray-800" />, title: 'Accompagnement dédié' },
+        { icon: <Award className="w-4 h-4 md:w-5 md:h-5 text-gray-800" />, title: 'Meilleur prix garanti' }
       ]
     },
     {
       id: 'sell',
       title: 'VENDRE UN VÉHICULE',
       subtitle: 'Vendez en toute simplicité',
-      description: 'Optimisez la vente de votre véhicule avec notre service clé en main. Nous prenons en charge l\'estimation, la valorisation et la commercialisation de votre voiture.',
-      icon: <DollarSign className="w-6 h-6" />,
+      description: 'Optimisez la vente de votre véhicule avec notre service clé en main. Nous prenons en charge l\'estimation, la valorisation et la commercialisation de votre voiture.', // Fixed unescaped entity
+      mobileDescription: 'Service clé en main pour l\'estimation, valorisation et vente de votre véhicule.', // Fixed unescaped entity
+      icon: <DollarSign className="w-5 h-5 md:w-6 md:h-6" />,
       color: 'bg-gray-50',
       benefits: [
-        { icon: <BarChart2 className="w-5 h-5 text-[#C8EC66]" />, title: 'Estimation gratuite' },
-        { icon: <Zap className="w-5 h-5 text-[#C8EC66]" />, title: 'Vente rapide' },
-        { icon: <Lock className="w-5 h-5 text-[#C8EC66]" />, title: 'Paiement sécurisé' }
+        { icon: <BarChart2 className="w-4 h-4 md:w-5 md:h-5 text-[#C8EC66]" />, title: 'Estimation gratuite' },
+        { icon: <Zap className="w-4 h-4 md:w-5 md:h-5 text-[#C8EC66]" />, title: 'Vente rapide' },
+        { icon: <Lock className="w-4 h-4 md:w-5 md:h-5 text-[#C8EC66]" />, title: 'Paiement sécurisé' }
       ]
     }
   ];
-  
-  const getCardStyle = (cardId) => {
+
+  const getCardStyle = (cardId: string) => { // Added type for cardId
+    // Pour les écrans mobiles, pas d'animation au survol
+    if (isMobile) return {};
+
     if (hoveredCard === null) return {};
-    
+
     const cardIndex = cards.findIndex(card => card.id === cardId);
     const hoveredIndex = cards.findIndex(card => card.id === hoveredCard);
-    
+
     // Si c'est la carte "sell" qui est survolée
     if (hoveredCard === 'sell' && cardId === 'sell') {
-      return { 
+      return {
         width: '150%',
-         x: '-35%' // Déplacement vers la gauche
+        x: '-35%' // Déplacement vers la gauche
       };
     }
-    
+
     // Si la carte "sell" est survolée, déplacer les autres cartes vers la droite
     if (hoveredCard === 'sell' && cardIndex < hoveredIndex) {
       return { x: '-50%' };
     }
-    
+
     // Pour les autres cartes survolées
     if (hoveredCard === cardId && cardId !== 'sell') {
       return { width: '150%' };
     }
-    
+
     // Si une autre carte est survolée
     if (cardIndex > hoveredIndex) {
       return { x: '50%' };
     }
-    
+
     return {};
   };
 
-  return (
-    <section className="py-32 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-20">
-          <h2 className="text-5xl font-bold mb-6 text-gray-900">Nos Solutions</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">Découvrez nos services sur mesure pour répondre à tous vos besoins automobiles</p>
-        </div>
+  // Animation d'apparition des cartes
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
 
-        <div className="grid grid-cols-3 gap-10 h-[550px]">
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.25, 0.1, 0.25, 1]
+      }
+    }
+  };
+
+  return (
+    <section className="py-16 md:py-32 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <motion.div
+          className="text-center mb-10 md:mb-20"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }} // Changed to whileInView for scroll trigger
+          viewport={{ once: true, amount: 0.3 }} // Configure viewport
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 text-gray-900">Nos Solutions</h2>
+          <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto">
+            {isMobile
+              ? "Nos services personnalisés pour tous vos besoins automobiles"
+              : "Découvrez nos services sur mesure pour répondre à tous vos besoins automobiles"}
+          </p>
+        </motion.div>
+
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10 max-w-sm md:max-w-none mx-auto"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible" // Changed to whileInView
+          viewport={{ once: true, amount: 0.1 }} // Stagger animation starts when container is slightly visible
+        >
           {cards.map((card) => (
             <motion.div
               key={card.id}
-              className={`${card.color} rounded-3xl overflow-hidden relative ${
-                card.color === 'bg-white' ? 'border-2 border-gray-200 shadow-sm' : 'border border-gray-100'
-              } hover:shadow-2xl transition-shadow`}
+              className={`${card.color} rounded-3xl overflow-hidden relative mb-6 md:mb-0 ${card.color === 'bg-white' ? 'border-2 border-gray-200 shadow-sm' : 'border border-gray-100'
+                } hover:shadow-2xl transition-shadow`}
               initial={{ scale: 1, originX: card.id === 'sell' ? 1 : 0.5 }}
               animate={getCardStyle(card.id)}
               transition={{ duration: 0.4, ease: 'easeOut' }}
-              onHoverStart={() => setHoveredCard(card.id)}
-              onHoverEnd={() => setHoveredCard(null)}
+              onHoverStart={() => !isMobile && setHoveredCard(card.id)} // Disable hover on mobile
+              onHoverEnd={() => !isMobile && setHoveredCard(null)}     // Disable hover on mobile
+              variants={cardVariants} // Apply individual card animation variant
             >
-              <motion.div className="h-full p-10 flex flex-col">
+              <motion.div className="h-full p-5 md:p-10 flex flex-col">
                 {/* Header */}
-                <div className="flex items-center gap-5 mb-8">
-                  <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${
-                    card.id === 'order' 
-                      ? 'bg-white text-gray-800' 
+                <div className="flex items-center gap-3 md:gap-5 mb-4 md:mb-8">
+                  <div className={`w-10 h-10 md:w-14 md:h-14 rounded-xl flex items-center justify-center flex-shrink-0 ${ // Added flex-shrink-0
+                    card.id === 'order'
+                      ? 'bg-white text-gray-800'
                       : 'bg-gray-100 text-gray-800'
-                  }`}>
+                    }`}>
                     {card.icon}
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold tracking-wide text-gray-900">
+                    <h3 className="text-base md:text-xl font-bold tracking-wide text-gray-900">
                       {card.title}
                     </h3>
-                    <p className="text-gray-700 font-medium">
+                    <p className="text-xs md:text-base text-gray-700 font-medium">
                       {card.subtitle}
                     </p>
                   </div>
                 </div>
 
-                {/* Description */}
-                <p className="text-gray-600 text-lg leading-relaxed mb-10">
-                  {hoveredCard === card.id ? card.description : card.description.slice(0, 80) + '...'}
+                {/* Description - version complètement différente sur mobile */}
+                <p className="text-gray-600 text-sm md:text-lg leading-relaxed mb-4 md:mb-10 min-h-[60px] md:min-h-[110px]"> {/* Added min-height to reduce layout shift */}
+                  {isMobile ? card.mobileDescription :
+                    (hoveredCard === card.id && !isMobile) ? card.description : card.description.slice(0, 80) + '...'}
                 </p>
 
                 {/* Benefits */}
-                <ul className="space-y-5 mb-10 grow">
+                <ul className="space-y-3 md:space-y-5 mb-5 md:mb-10 grow">
                   {card.benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-center gap-3">
-                      <div className={`p-1 rounded-full ${card.id === 'order' ? 'bg-white' : 'bg-gray-50'}`}>
+                    <li key={index} className="flex items-center gap-2 md:gap-3">
+                      <div className={`p-1 rounded-full flex-shrink-0 ${card.id === 'order' ? 'bg-white' : 'bg-gray-50'}`}> {/* Added flex-shrink-0 */}
                         {benefit.icon}
                       </div>
-                      <span className="text-gray-800 font-medium text-lg">{benefit.title}</span>
+                      <span className="text-gray-800 font-medium text-sm md:text-lg">{benefit.title}</span>
                     </li>
                   ))}
                 </ul>
 
                 {/* Footer */}
                 <div className="mt-auto">
-                  <button 
-                    className={`w-full py-4 rounded-xl font-medium text-lg transition-colors flex items-center justify-center gap-2 ${
-                      card.id === 'order' 
-                        ? 'bg-[#5D6970] text-white hover:bg-[#4A565C]' 
+                  <button
+                    className={`w-full py-2.5 md:py-4 rounded-xl font-medium text-sm md:text-lg transition-colors flex items-center justify-center gap-2 ${card.id === 'order'
+                        ? 'bg-[#5D6970] text-white hover:bg-[#4A565C]'
                         : 'bg-[#C8EC66] text-gray-800 hover:bg-[#d4f080]'
-                    }`}
+                      }`}
                   >
                     En savoir plus
-                    <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
+                    <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   </button>
                 </div>
               </motion.div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
 }
 
-function ImportSection() {
-  return (
-    <section className="py-20 px-4 bg-gray-100">
-      <motion.div
-        initial="initial"
-        whileInView="animate"
-        viewport={{ once: true }}
-        variants={staggerChildren}
-        className="max-w-7xl mx-auto"
-      >
-        {/* Header */}
-        <motion.div variants={fadeInUp} className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold leading-tight max-w-4xl mx-auto text-gray-800">
-            DÉCOUVREZ NOTRE SERVICE D&apos;IMPORTATION : UN CHOIX DE VÉHICULES MULTIPLES & PERSONNALISÉS, AVEC UN
-            ACCOMPAGNEMENT SUR-MESURE !
-          </h2>
-        </motion.div>
-
-        {/* Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Main Import Card */}
-          <motion.div
-            variants={fadeInUp}
-            className="bg-[#2F4C3B] text-white p-8 rounded-2xl md:col-span-1 flex flex-col justify-center items-center text-center"
-          >
-            <h3 className="text-2xl font-bold mb-6">ENVIE D&apos;IMPORTER VOTRE FUTURE VEHICULE ?</h3>
-            <p className="mb-6">VROOM VOUS ACCOMPAGNE DANS VOS PROJETS AUTOMOBILES</p>
-            <ArrowRight className="w-12 h-12 text-[#C8EC66]" />
-          </motion.div>
-
-          {/* Advantages Card */}
-          <motion.div variants={fadeInUp} className="bg-white p-8 rounded-2xl shadow-lg md:col-span-2">
-            <div className="flex items-center mb-4">
-              <BarChart className="w-10 h-10 text-[#C8EC66] mr-4" />
-              <h3 className="text-2xl font-bold">AVANTAGES</h3>
-            </div>
-            <ul className="space-y-2">
-              <li className="flex items-center">
-                <CheckCircle className="w-5 h-5 text-[#C8EC66] mr-2" />
-                Prix compétitifs
-              </li>
-              <li className="flex items-center">
-                <CheckCircle className="w-5 h-5 text-[#C8EC66] mr-2" />
-                Présent dans tous les marchés automobiles européens
-              </li>
-              <li className="flex items-center">
-                <CheckCircle className="w-5 h-5 text-[#C8EC66] mr-2" />
-                Services d&apos;accompagnement tout-en-un
-              </li>
-            </ul>
-          </motion.div>
-
-          {/* Expertise Card */}
-          <motion.div variants={fadeInUp} className="bg-[#2F4C3B] text-white p-8 rounded-2xl">
-            <h3 className="text-2xl font-bold mb-4">EXPERTISE</h3>
-            <ul className="space-y-2">
-              <li className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-[#C8EC66] mr-2 mt-1 flex-shrink-0" />
-                <span>SUIVI ET INSPECTION DE L&apos;HISTORIQUE DU VEHICULE</span>
-              </li>
-              <li className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-[#C8EC66] mr-2 mt-1 flex-shrink-0" />
-                <span>INSPECTION MECANIQUE & KILOMETRIQUES</span>
-              </li>
-              <li className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-[#C8EC66] mr-2 mt-1 flex-shrink-0" />
-                <span>CONSEIL SUR LE CHOIX DE VOTRE VEHICULE ET DES OPTIONS</span>
-              </li>
-              <li className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-[#C8EC66] mr-2 mt-1 flex-shrink-0" />
-                <span>PAS DE TRACAS ADMINISTRATIF ON S&apos;OCCUPE DE TOUT</span>
-              </li>
-            </ul>
-          </motion.div>
-
-          {/* Transparency Card */}
-          <motion.div variants={fadeInUp} className="bg-[#2F4C3B] text-white p-8 rounded-2xl">
-            <div className="flex items-center mb-4">
-              <Search className="w-10 h-10 text-[#C8EC66] mr-4" />
-              <h3 className="text-2xl font-bold">TRANSPARENCE</h3>
-            </div>
-            <ul className="space-y-2">
-              <li className="flex items-center">
-                <CheckCircle className="w-5 h-5 text-[#C8EC66] mr-2" />
-                TRANSPARENCE COMPLETE SUR LE CHOIX DE VOTRE VEHICULE
-              </li>
-              <li className="flex items-center">
-                <CheckCircle className="w-5 h-5 text-[#C8EC66] mr-2" />
-                PAS DE FRAIS CACHES
-              </li>
-            </ul>
-          </motion.div>
-
-          {/* Flexibility Card */}
-          <motion.div variants={fadeInUp} className="bg-white p-8 rounded-2xl shadow-lg">
-            <div className="flex items-center mb-4">
-              <Truck className="w-10 h-10 text-[#C8EC66] mr-4" />
-              <h3 className="text-2xl font-bold">FLEXIBILITE</h3>
-            </div>
-            <ul className="space-y-2">
-              <li className="flex items-center">
-                <CheckCircle className="w-5 h-5 text-[#C8EC66] mr-2" />
-                LIVRAISON A DOMICILE DANS TOUTE LA FRANCE
-              </li>
-              <li className="flex items-center">
-                <CheckCircle className="w-5 h-5 text-[#C8EC66] mr-2" />
-                SUPPLEMENT HORS ILE-DE-FRANCE
-              </li>
-            </ul>
-            <div className="mt-6 text-sm text-right flex items-center justify-end gap-2">Made in France 🇫🇷</div>
-          </motion.div>
-        </div>
-      </motion.div>
-    </section>
-  )
-}
 const HeroSection = () => {
   return (
     <section className="min-h-screen relative overflow-hidden flex flex-col">
@@ -339,12 +278,6 @@ const HeroSection = () => {
           >
             <div className="relative">
               <h2 className="font-archivo text-4xl md:text-5xl font-bold text-white">vroom</h2>
-              {/* <motion.div 
-                initial={{ width: 0 }}
-                animate={{ width: '100%' }}
-                transition={{ duration: 0.8, delay: 1.5 }}
-                className="absolute -bottom-1 left-0 h-1 bg-[#C8EC66] rounded-full"
-              /> */}
             </div>
           </motion.div>
         </div>
@@ -362,11 +295,11 @@ const HeroSection = () => {
             <motion.div variants={fadeInUp} className="space-y-6">
               <h1 className="font-archivo text-5xl md:text-7xl font-bold tracking-tight">
                 <span className="text-white">ACHETER UNE VOITURE</span>
-                <div className="text-[#C8EC66] mt-2">N'A JAMAIS ÉTÉ AUSSI SIMPLE</div>
+                <div className="text-[#C8EC66] mt-2">N&apos;A JAMAIS ÉTÉ AUSSI SIMPLE</div>
               </h1>
               
               <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto mt-8">
-                Des véhicules d'occasion contrôlés et garantis, livrés directement à votre domicile
+                Des véhicules d&apos;occasion contrôlés et garantis, livrés directement à votre domicile
               </p>
             </motion.div>
 
@@ -439,120 +372,34 @@ const HeroSection = () => {
   );
 };
 
-const StatsSection = () => (
-  <section className="py-20 bg-[#C8EC66]/10">
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      className="max-w-7xl mx-auto px-4"
-    >
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-        {[
-          { number: "1000+", label: "Véhicules vendus 🚗" },
-          { number: "98%", label: "Clients satisfaits 😊" },
-          { number: "24/7", label: "Support client 💬" },
-          { number: "30+", label: "Villes couvertes 🌍" }
-        ].map((stat, i) => (
-          <motion.div
-            key={i}
-            whileHover={{ scale: 1.05 }}
-            className="bg-white p-6 rounded-2xl shadow-lg"
-          >
-            <div className="text-3xl md:text-4xl font-bold text-[#C8EC66]">{stat.number}</div>
-            <div className="text-gray-600 mt-2">{stat.label}</div>
-          </motion.div>
-        ))}
-      </div>
-    </motion.div>
-  </section>
-);
-
-const ProcessSection = () => (
-  <section className="py-20">
-    <div className="max-w-7xl mx-auto px-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-center mb-16"
-      >
-        <h2 className="text-4xl md:text-5xl font-bold mb-4">Comment ça marche? 🤔</h2>
-        <p className="text-xl text-gray-600">Simple, rapide et transparent</p>
-      </motion.div>
-
-      <div className="grid md:grid-cols-3 gap-8">
-        {[
-          { emoji: "🔍", title: "1. Trouvez", desc: "Parcourez notre sélection de véhicules certifiés" },
-          { emoji: "📝", title: "2. Réservez", desc: "Choisissez votre véhicule et réservez en ligne" },
-          { emoji: "🚗", title: "3. Roulez", desc: "Recevez votre véhicule ou venez le chercher" }
-        ].map((step, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.2 }}
-            className="bg-white p-8 rounded-2xl shadow-lg text-center"
-          >
-            <span className="text-5xl mb-6 block">{step.emoji}</span>
-            <h3 className="text-2xl font-bold mb-4">{step.title}</h3>
-            <p className="text-gray-600">{step.desc}</p>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  </section>
-);
 
 export default function Home() {
   return (
     <>
-    <div className="min-h-screen bg-white">
-      <HeroSection />
-      <HeaderSection />
-      <ServiceCards />
-      <BuyVehicleBanner />
-      {/* <StatsSection /> */}
-      {/* <ProcessSection /> */}
-      {/* <VehiculesSection /> */}
-      <CarSectionLanding />
-      {/* <SimilarCarsSection /> */}
-      <DriverOptionsSection />
-      {/* <DriverSections /> */}
-      {/* <ImportSection /> */}
-      <ProcessGridSection />
-      <VroomBusinessSection />
-      <Apoinntement />
-      {/* <PartenaireMobiliteSection /> */}
-      <FaqSection />
-    
-      <Footer />
-      
-    </div>
+      {/* No <Head> needed here in App Router client components */}
+      <div className="min-h-screen bg-white antialiased"> {/* Added antialiased */}
+        <HeroSection />
+        <AboutVroomSection />
+        <ServiceCards />
+        <BuyFromHomeBanner />
+        <VehicleShowcaseSection />
+        {/* Section pour les Jeunes Permis et Chauffeurs VTC */}
+        <div id="jeunes-permis" className="scroll-mt-20"> {/* Added scroll-mt for anchor offset */}
+          <DriverProfilesSection />
+        </div>
+        <ProcessGridSection />
+        {/* Section pour les Entreprises */}
+        <div id="entreprises" className="scroll-mt-20"> {/* Added scroll-mt */}
+          <VroomBusinessSection />
+        </div>
+        {/* Section pour les Rendez-vous */}
+        <div id="rendez-vous" className="scroll-mt-20"> {/* Added scroll-mt */}
+          <SectionRendezVous />
+        </div>
+        <FaqSection />
+        <Footer />
+      </div>
     </>
   );
 }
 
-{/* <FadeIn delay={1.4} className="absolute bottom-6 right-6 z-10">
-          <div className="bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 flex items-center space-x-2">
-            <Image
-              src="/placeholder.svg?height=20&width=20"
-              alt="French flag"
-              width={20}
-              height={20}
-              className="rounded-full"
-            />
-            <span className="text-sm">Made in France</span>
-          </div>
-        </FadeIn> */}
-
-
-      //   <FadeIn delay={1.2} className="absolute bottom-0 left-0 z-10 p-6">
-      //   <div className="bg-gray-50/80 backdrop-blur-sm rounded-lg p-6 max-w-sm">
-      //     <h3 className="text-2xl font-bold mb-2">24/7 Disponible</h3>
-      //     <p className="text-gray-600">
-      //       Profitez de nos services de location à toute heure, tous les jours de la semaine.
-      //     </p>
-      //   </div>
-      // </FadeIn>

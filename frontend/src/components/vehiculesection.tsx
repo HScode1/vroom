@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Check } from 'lucide-react';
+import Image from 'next/image';
 
 interface VehicleCardProps {
   title: string;
@@ -149,7 +150,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
       className="bg-neutral-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow cursor-pointer"
     >
       <div className="relative aspect-[4/3]">
-        <img 
+        <Image 
           src={image} 
           alt={title} 
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
