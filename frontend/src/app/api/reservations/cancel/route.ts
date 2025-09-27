@@ -1,8 +1,9 @@
 import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
+import { NextRequest } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     // Authentification de l'utilisateur
     const { userId } = getAuth(request);

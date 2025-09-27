@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
-// Removed unused import: import Image from 'next/image';
+import Image from 'next/image';
 
 const ProcessCard = ({ title, image, className }: { title: string; image: string; className?: string }) => {
   // Removed unused description prop from component definition and props destructuring
@@ -15,9 +15,10 @@ const ProcessCard = ({ title, image, className }: { title: string; image: string
     >
       {/* Background Image */}
       <div className="absolute inset-0">
-        <img
+        <Image
           src={image}
           alt={title}
+          fill
           // Using style for aspect-ratio might be more robust depending on container constraints
           className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
         />

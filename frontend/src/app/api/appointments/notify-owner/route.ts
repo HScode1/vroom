@@ -51,7 +51,8 @@ export async function POST(request: Request) {
       if (isNaN(appointmentDate.getTime())) {
         throw new Error('Format de date/heure invalide');
       }
-    } catch (e) {
+    } catch (error) {
+      console.error('Erreur de format de date/heure:', error);
       return NextResponse.json({ error: 'Format de date ou d\'heure invalide' }, { status: 400 });
     }
 

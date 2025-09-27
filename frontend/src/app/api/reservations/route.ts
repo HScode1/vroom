@@ -1,8 +1,9 @@
 import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
+import { NextRequest } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     // Authentification de l'utilisateur
     const { userId } = getAuth(request);
@@ -11,7 +12,7 @@ export async function POST(request: Request) {
     }
 
     // Récupération des données de la requête
-    const { carId, appointmentDate, duration, message, deliveryInfo } = await request.json();
+    const { carId, appointmentDate, duration } = await request.json();
     
     // Validation des données
     if (!carId || !appointmentDate || !duration) {
@@ -128,12 +129,28 @@ export async function POST(request: Request) {
       .select("email")
       .eq("id", userRecord.id)
       .single();
+    
+    if (userDataError) {
+      console.error("Erreur lors de la récupération des données utilisateur:", userDataError);
+      return NextResponse.json(
+        { error: "Erreur lors de la récupération des données utilisateur" },
+        { status: 500 }
+      );
+    }
 
     const { data: sellerData, error: sellerError } = await supabase
       .from("users")
       .select("email")
       .eq("id", car.seller_id)
       .single();
+    
+    if (sellerError) {
+      console.error("Erreur lors de la récupération des données vendeur:", sellerError);
+      return NextResponse.json(
+        { error: "Erreur lors de la récupération des données vendeur" },
+        { status: 500 }
+      );
+    }
 
     // Envoi des emails de confirmation (asynchrone)
     try {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react'; // Added useCallback
+import React, { useEffect, useState } from 'react'; // Added useCallback
 import { motion } from 'framer-motion';
 import { CircleOff, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
@@ -103,7 +103,12 @@ const LoadingPage: React.FC<LoadingPageProps> = ({
                 // Trigger sync but don't necessarily wait for it to complete
                 // unless syncStatus needs to influence redirection.
                 if (syncStatus === 'idle') {
-                     syncUserWithSupabase(user);
+                     setSyncStatus('syncing');
+                     syncUserWithSupabase(user).then(() => {
+                        setSyncStatus('synced');
+                     }).catch(() => {
+                        setSyncStatus('error');
+                     });
                 }
 
                 // --- Determine Redirect Path ---
@@ -211,7 +216,7 @@ const LoadingPage: React.FC<LoadingPageProps> = ({
                         </div>
                     ) : (
                         <p className="text-sm text-gray-500 h-5 flex items-center justify-center">
-                            Quelque chose n'a pas fonctionné correctement.
+                            Quelque chose n&apos;a pas fonctionné correctement.
                         </p>
                     )}
                 </motion.div>
