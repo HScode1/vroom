@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   CircleDot, 
@@ -373,7 +374,7 @@ const MechanicalInspection: React.FC<MechanicalInspectionProps> = ({
 }) => {
   const [activeSection, setActiveSection] = useState<string>('pneumatiques');
   
-  const renderContent = (): JSX.Element | null => {
+  const renderContent = (): React.JSX.Element | null => {
     switch (activeSection) {
       case 'pneumatiques':
         return tireData ? (
